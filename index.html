@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Фрилансер — локальный AI, видеогенерация, автоматизация</title>
+<style>
+  :root{
+    --bg:#0e1320; --card:#161c2d; --line:#25304a; --txt:#e8ecf5; --muted:#9aa6bf;
+    --accent:#ffd000; --accent2:#4f8cff; --ok:#3dd68c;
+  }
+  *{box-sizing:border-box; margin:0; padding:0}
+  body{background:var(--bg); color:var(--txt); font-family:-apple-system,'Segoe UI',Roboto,Arial,sans-serif; line-height:1.6}
+  .wrap{max-width:1000px; margin:0 auto; padding:0 20px}
+  header{padding:48px 0 28px}
+  .badge{display:inline-block; background:rgba(255,208,0,.12); color:var(--accent); border:1px solid rgba(255,208,0,.35); padding:4px 14px; border-radius:999px; font-size:13px; font-weight:600; margin-bottom:18px}
+  h1{font-size:34px; line-height:1.25; letter-spacing:-.5px}
+  h1 span{color:var(--accent)}
+  .sub{color:var(--muted); margin-top:12px; font-size:17px; max-width:720px}
+  .chips{display:flex; flex-wrap:wrap; gap:8px; margin-top:20px}
+  .chip{background:var(--card); border:1px solid var(--line); border-radius:8px; padding:6px 12px; font-size:13.5px; color:#cdd6ea}
+  h2{font-size:24px; margin:46px 0 18px; letter-spacing:-.3px}
+  h2 b{color:var(--accent)}
+  .grid{display:grid; grid-template-columns:1fr 1fr; gap:18px}
+  @media(max-width:760px){ .grid{grid-template-columns:1fr} }
+  .case{background:var(--card); border:1px solid var(--line); border-radius:14px; padding:22px}
+  .case .tag{font-size:12px; font-weight:700; letter-spacing:.4px; color:var(--accent2); text-transform:uppercase}
+  .case h3{font-size:18px; margin:8px 0 10px}
+  .case p{color:var(--muted); font-size:14.5px}
+  .facts{display:flex; flex-wrap:wrap; gap:8px; margin-top:14px}
+  .fact{background:#0f1728; border:1px solid var(--line); color:var(--ok); border-radius:8px; padding:4px 10px; font-size:12.5px; font-weight:600}
+  .video{grid-column:1 / -1; background:var(--card); border:1px solid var(--line); border-radius:14px; padding:22px}
+  video{width:100%; max-width:760px; border-radius:10px; display:block; margin-top:14px; background:#000}
+  .note{color:var(--muted); font-size:13px; margin-top:10px}
+  ul.stlist{columns:2; gap:30px; margin-top:6px}
+  ul.stlist li{break-inside:avoid; margin:7px 0; color:#cdd6ea; font-size:14.5px}
+  .platforms{display:flex; gap:10px; flex-wrap:wrap; margin-top:12px}
+  .platforms span{background:var(--card); border:1px solid var(--line); padding:6px 14px; border-radius:8px; font-size:13.5px; color:#cdd6ea}
+  footer{padding:40px 0 60px}
+  .cta{background:linear-gradient(135deg,#1a2340,#141a2b); border:1px solid var(--line); border-radius:16px; padding:28px}
+  .cta h3{font-size:20px}
+  .cta p{color:var(--muted); margin:8px 0 14px}
+  .btn{display:inline-block; background:var(--accent); color:#14161c; font-weight:700; text-decoration:none; padding:11px 22px; border-radius:9px}
+  .btn:hover{filter:brightness(1.05)}
+  .muted{color:var(--muted)}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <div class="badge">Доступен для заказов</div>
+  <h1>Локальный ИИ, генерация видео и автоматизация<br><span>на вашем компьютере — без облаков и абонплат</span></h1>
+  <p class="sub">Строю рабочие AI-конвейеры на Windows: нейровидео и картинки на 12–16 ГБ видеокарте, озвучка русским TTS, Telegram-боты, скрипты-автоматизации, правки интернет-магазинов. Всё локально: данные клиента не уходят в сеть, генерации не влекут плат за токены.</p>
+  <div class="chips">
+    <span class="chip">ComfyUI (Wan 2.2, HunyuanVideo‑1.5, FLUX, SDXL)</span>
+    <span class="chip">Python / PowerShell</span>
+    <span class="chip">ffmpeg-конвейеры</span>
+    <span class="chip">Telegram-боты</span>
+    <span class="chip">OpenCart / CMS-правки</span>
+    <span class="chip">Windows-автоматизация</span>
+  </div>
+</header>
+
+<h2><b>Кейсы</b></h2>
+<div class="grid">
+
+  <div class="video">
+    <div class="tag">Кейс 01 — Видеогенерация под ключ</div>
+    <h3>Локальная нейровидео 720p на RTX 4070 (12 ГБ)</h3>
+    <p>Поднял рабочий конвейер видеогенерации: две фотореалистичные модели (Wan 2.2 14B fp8 и HunyuanVideo‑1.5), парное сравнение качества, генерация клипов 1280×720 со склейкой в готовые 20-секундные ролики. В процессе — глубокая диагностика: локализовал отказы I/O при стриминге весов с HDD, перенёс файлы на NVMe и перенастроил загрузку устойчиво к объёму памяти.</p>
+    <video src="./demo/ai_video_demo.mp4" controls loop muted playsinline></video>
+    <div class="note">Живой кадр из одной из генераций (сгенерирован локально, без облаков).</div>
+    <div class="facts"><span class="fact">1280×720 @ 16–24 fps</span><span class="fact">2 модели в сравнении</span><span class="fact">0 ₽ за генерацию</span><span class="fact">Работает на сутки</span></div>
+  </div>
+
+  <div class="case">
+    <div class="tag">Кейс 02 — Голосовой помощник</div>
+    <h3>Локальный ассистент-диктовщик на ПК</h3>
+    <p>Собрал python-службу распознавания речи на компьютере клиента: приём речи с микрофона, расшифровка, отправка распознанного текста в рабочие приложения. Полностью офлайн — не передаёт ни один байт наружу.</p>
+    <div class="facts"><span class="fact">Работает в фоне</span><span class="fact">Автозапуск с системой</span><span class="fact">100% локально</span></div>
+  </div>
+
+  <div class="case">
+    <div class="tag">Кейс 03 — Озвучка и звук к видео</div>
+    <h3>Пайплайн «видео + русская озвучка»</h3>
+    <p>Сконструировал конвейер: локальный TTS-движок с русским голосом генерирует дикторскую дорожку, ffmpeg накладывает её на видеоряд и выравнивает громкость — готовый mp4 «под ключ» без онлайн-сервисов.</p>
+    <div class="facts"><span class="fact">Piper TTS (ru)</span><span class="fact">ffmpeg-микс</span><span class="fact">mp4 на выходе</span></div>
+  </div>
+
+  <div class="case">
+    <div class="tag">Кейс 04 — Веб-модификации</div>
+    <h3>Разбор и правки сайта на OpenCart</h3>
+    <p>На примере живого интернет-магазина кухонь: провёл полную диагностику первого экрана, нашёл неочевидный источник визуального дефекта (рекламная полоса была впечатана в webp-баннер и не видна в коде), а за ним — полный план правок из шести шагов со всеми макетами текстов и кнопок. Заказчик получает готовый к внедрению план за часы, а не «по мере обсуждения».</p>
+    <div class="facts"><span class="fact">Диагностика до файла</span><span class="fact">План работ с текстами</span><span class="fact">Правки без переделки сайта</span></div>
+  </div>
+
+</div>
+
+<h2><b>Стек и услуги</b></h2>
+<ul class="stlist">
+  <li>Видео и картинки: Wan 2.2, HunyuanVideo, FLUX, SDXL — настройка, обучение промптам, пакетные пайплайны</li>
+  <li>Озвучка: русские локальные TTS, звук к видео (ffmpeg микс)</li>
+  <li>Telegram-боты: приём заявок, рассылки, интеграции с таблицами/CRM</li>
+  <li>Скрипты автоматизации Windows: бэкапы, перенос данных, мониторинг, роботизация рутины</li>
+  <li>Сайты: правки вёрстки/модулей на OpenCart и других CMS, баннеры, формы</li>
+  <li>Оптимизация рабочего ПК под AI: настройка GPU/RAM/дисков, стабильные конфигурации</li>
+</ul>
+<div class="platforms"><span>Kwork</span><span>FL.ru</span><span>PROFI.ru</span><span>Freelancer.com</span></div>
+
+<footer>
+  <div class="cta">
+    <h3>Задача — обсудим за час</h3>
+    <p>Опишите задачу — отвечу с планом и сроком. Работаю с живыми демонстрациями результата на вашем оборудовании.</p>
+    <a class="btn" href="#" id="contact">Написать в Telegram</a>
+    <div class="note" id="contact-note">Ссылку-контакт подставьте свою: @username</div>
+  </div>
+</footer>
+
+</div>
+</body>
+</html>
