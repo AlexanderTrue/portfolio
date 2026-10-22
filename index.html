@@ -69,8 +69,11 @@
     <div class="tag">Кейс 01 — Видеогенерация под ключ</div>
     <h3>Локальное нейровидео</h3>
     <p>Поднял рабочий конвейер видеогенерации: две фотореалистичные модели (Wan 2.2 14B fp8 и HunyuanVideo‑1.5), парное сравнение качества, генерация клипов со склейкой в готовые ролики. В процессе — глубокая диагностика: локализовал отказы I/O при стриминге весов.</p>
-    <video src="./demo/ai_video_demo.mp4" controls loop muted playsinline></video>
-    <div class="note">Живой кадр из одной из генераций (сгенерирован локально, без облаков).</div>
+    <h4 style="margin:16px 0 2px; font-size:14.5px">Wan 2.2 14B fp8 — финал 20 сек</h4>
+    <video src="./demo/wan22_20sec_cipher.mp4" controls playsinline preload="metadata" poster="./demo/wan22_poster.jpg"></video>
+    <h4 style="margin:16px 0 2px; font-size:14.5px">HunyuanVideo‑1.5 720p — финал 20 сек</h4>
+    <video src="./demo/hunyuan15_20sec_cipher.mp4" controls playsinline preload="metadata" poster="./demo/hunyuan15_poster.jpg"></video>
+    <div class="note">Каждый ролик — склейка из четырёх генераций по 5 сек (полн. локально, без облаков), фоновый трек Kevin MacLeod «Cipher» (CC‑BY). Модели — слайд‑пари Wan 2.2 против HunyuanVideo‑1.5 по качеству и скорости.</div>
     <div class="facts"><span class="fact">1280×720 @ 16–24 fps</span><span class="fact">2 модели в сравнении</span><span class="fact">0 ₽ за генерацию</span><span class="fact">Работает на сутки</span></div>
   </div>
 
