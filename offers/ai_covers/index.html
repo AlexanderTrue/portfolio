@@ -1,51 +1,107 @@
 <!DOCTYPE html>
 <html lang="ru"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Обложки для статей и блогов — генерация на нейросети Flux</title>
+<title>Обложки для статей и блогов — Flux, за 60 минут</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,800;1,600&family=Manrope:wght@400;600;800&display=swap" rel="stylesheet">
 <style>
-:root{--ink:#18202a;--mute:#5b6676;--line:#e4e8ee;--acc:#1f6feb}
-*{box-sizing:border-box}
-body{margin:0;font:16px/1.6 'Segoe UI',Roboto,sans-serif;color:var(--ink);background:#fff}
-.wrap{max-width:900px;margin:0 auto;padding:32px 20px 60px}
-.k{color:var(--mute);font-size:13px;letter-spacing:.06em;text-transform:uppercase}
-h1{font-size:30px;line-height:1.25;margin:.5em 0 .4em}
-.pitch{font-size:18px}
-.facts{display:flex;gap:14px;flex-wrap:wrap;margin:26px 0}
-.facts div{border:1px solid var(--line);border-radius:10px;padding:12px 16px}
-.facts b{display:block;font-size:20px;color:var(--acc)}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px;margin:22px 0}
-.grid figure{margin:0;border:1px solid var(--line);border-radius:12px;overflow:hidden;background:#fafbfc}
-.grid img{width:100%;display:block}
-.grid figcaption{padding:10px 14px;font-size:14px;color:var(--mute)}
-.doc{border:1px solid var(--line);border-radius:12px;padding:20px 22px;margin:22px 0}
-.doc h2{font-size:17px;margin:0 0 10px}
-.doc li{margin:6px 0}
-.cta{background:var(--ink);color:#fff;border-radius:12px;padding:20px 22px;margin-top:28px}
-.cta b{color:#9ec5ff}
-small{color:var(--mute)}
+:root{--ink:#0d0e12;--paper:#f4f2ec;--acid:#e8ff47;--mute:#8b8d96}
+*{box-sizing:border-box;margin:0}
+html{scroll-behavior:smooth}
+body{font:16px/1.6 Manrope,sans-serif;background:var(--ink);color:var(--paper)}
+.wrap{max-width:960px;margin:0 auto;padding:0 20px 80px}
+.kicker{display:inline-block;border:1px solid #7a7f8c;border-radius:999px;padding:6px 16px;font-size:12px;letter-spacing:.22em;text-transform:uppercase;color:var(--mute);margin-top:40px}
+h1{font-family:'Playfair Display',serif;font-weight:800;font-size:clamp(40px,7vw,72px);line-height:1.05;margin:24px 0 8px}
+h1 em{font-style:italic;color:var(--acid)}
+.strip{position:relative;overflow:hidden;white-space:nowrap;border-top:1px solid #2a2c33;border-bottom:1px solid #2a2c33;padding:10px 0;margin:34px -20px;font-size:13px;letter-spacing:.28em;text-transform:uppercase;color:var(--acid)}
+.strip span{display:inline-block;animation:tick 24s linear infinite;padding-left:0}
+@keyframes tick{to{transform:translateX(-50%)}}
+.pitch{max-width:620px;font-size:18px;color:#c9cad0;margin-top:26px}
+.pitch b{color:var(--paper)}
+.num{color:var(--acid);font-weight:800}
+.usp{display:flex;gap:0;border:1px solid #2a2c33;border-radius:14px;overflow:hidden;margin:40px 0;flex-wrap:wrap}
+.usp div{flex:1 1 200px;padding:20px 22px;border-right:1px solid #2a2c33}
+.usp div:last-child{border-right:0}
+.usp b{display:block;font-size:26px;font-family:'Playfair Display',serif;color:var(--acid)}
+.usp small{color:var(--mute);font-size:13px;letter-spacing:.08em;text-transform:uppercase}
+h2{font-family:'Playfair Display',serif;font-size:30px;margin:64px 0 6px}
+.sub{color:var(--mute);font-size:14px;margin-bottom:24px}
+.grid{display:grid;grid-template-columns:repeat(6,1fr);gap:14px}
+.grid figure{margin:0;position:relative;overflow:hidden;border-radius:4px;grid-column:span 3;cursor:default}
+.grid figure:nth-child(1){grid-column:span 6}
+.grid figure:nth-child(6){grid-column:span 6}
+.grid img{width:100%;display:block;filter:grayscale(1) contrast(1.05);transition:filter .5s,transform .5s}
+.grid figure:hover img{filter:none;transform:scale(1.02)}
+.tag{position:absolute;top:12px;left:12px;background:var(--acid);color:#0d0e12;font-size:11px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;padding:5px 10px;opacity:0;transition:opacity .3s}
+.grid figure:hover .tag{opacity:1}
+.steps{border-top:1px solid #2a2c33;margin-top:10px}
+.steps div{display:flex;gap:24px;padding:26px 0;border-bottom:1px solid #2a2c33;align-items:baseline}
+.steps .n{font-family:'Playfair Display',serif;font-size:34px;color:var(--acid);min-width:52px}
+.steps b{display:block;margin-bottom:4px;letter-spacing:.02em}
+.steps p{color:#c9cad0;max-width:560px;margin:0;font-size:15px}
+.price{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;margin:26px 0}
+.price div{border:1px solid #2a2c33;border-radius:14px;padding:24px;position:relative}
+.price .hot{background:var(--acid);color:#0d0e12}
+.price .hot small{color:#3a3d00}
+.price b{display:block;font-family:'Playfair Display',serif;font-size:30px}
+.price small{color:var(--mute);text-transform:uppercase;letter-spacing:.1em;font-size:11px}
+.price ul{list-style:none;padding:0;margin:14px 0 0;font-size:14px;color:#c9cad0}
+.price ul li{padding:4px 0;border-top:1px solid #26282f}
+.price .hot ul li{border-color:#00000022;color:#0d0e12}
+.price .hot ul{color:#0d0e12}
+.faq div{border-bottom:1px solid #2a2c33;padding:18px 0}
+.faq b{display:block;margin-bottom:6px}
+.faq p{color:var(--mute);font-size:15px;margin:0;max-width:640px}
+.cta{display:flex;align-items:center;justify-content:space-between;gap:20px;background:var(--acid);color:#0d0e12;border-radius:16px;padding:26px 30px;margin-top:60px;flex-wrap:wrap}
+.cta h3{font-family:'Playfair Display',serif;font-size:26px;margin:0}
+.cta a{display:inline-block;background:#0d0e12;color:var(--acid);text-decoration:none;font-weight:800;padding:14px 26px;border-radius:999px;letter-spacing:.04em;transition:transform .2s}
+.cta a:hover{transform:scale(1.05)}
+.foot{margin-top:40px;color:#5a5c66;font-size:13px;text-align:center}
+@keyframes rise{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:none}}
+.rise{animation:rise .7s cubic-bezier(.2,.7,.3,1) both}
+.d1{animation-delay:.05s}.d2{animation-delay:.15s}.d3{animation-delay:.25s}.d4{animation-delay:.35s}
+@media(max-width:640px){.grid figure{grid-column:span 6!important}}
 </style></head><body><div class="wrap">
-<div class="k">Портфолио · Генерация изображений нейросетями (Flux)</div>
-<h1>Обложки для статей и блогов — 6 примеров на нейросети Flux</h1>
-<p class="pitch">Подбираю промпт под тему вашей статьи, генерирую серию вариантов, довожу лучший до финальной обложки (кроп под ваш формат, цветокоррекция). Все картинки — реально сгенерированы Flux-моделью, без стоковых шаблонов и без чужих прав.</p>
-<div class="facts">
-<div><b>30–60 мин</b> срок на одну обложку</div>
-<div><b>от 500 ₽</b> за обложку (серия — скидка)</div>
-<div><b>3 варианта</b> на выбор в цене</div>
+<span class="kicker rise d1">Обложки на нейросетях — за 60 минут</span>
+<h1 class="rise d1">Обложка для статьи,<br>которую <em>не стыдно</em><br>показать редактору</h1>
+<div class="strip rise d2"><span>FLUX GENERATION · 6 ТЕМАТИК · 3 ВАРИАНТА В ЦЕНЕ · БЕЗ СТОКА · БЕЗ ВОДЯНЫХ ЗНАКОВ · СЕРИЯ СО СКИДКОЙ · FLUX GENERATION · 6 ТЕМАТИК · 3 ВАРИАНТА В ЦЕНЕ · БЕЗ СТОКА · БЕЗ ВОДЯНЫХ ЗНАКОВ · СЕРИЯ СО СКИДКОЙ · </span></div>
+<p class="pitch rise d2">Ты пишешь статью за день, а обложку не можешь найти неделю: сток — шаблонный, дизайнер — <span class="num">5000 ₽</span> и три дня. Я делаю обложку под твою тему на локальной Flux-модели: <b>промпт под настроение статьи, 3 варианта на выбор, финальный кроп под твой сайт</b>. Ниже — шесть живых примеров. Наведи, чтобы увидеть цвет.</p>
+<div class="usp rise d3">
+<div><b>60 мин</b><small>обложка в этот же день</small></div>
+<div><b>3</b><small>варианта на выбор</small></div>
+<div><b>0 ₽</b><small>права коммерческого использования</small></div>
+<div><b>24/7</b><small>генерация локально, без лимитов</small></div>
 </div>
+<h2 class="rise d3">Примеры — <em>наведите</em> на картинку</h2>
+<p class="sub">Курсор раскрывает цвет: так видно, что картинки не стоковые</p>
 <div class="grid">
-<figure><img src="images/01.jpg" alt="Обложка: нейросети и технологии"><figcaption>Технологии / AI — IT-блог</figcaption></figure>
-<figure><img src="images/02.jpg" alt="Обложка: бизнес и финансы"><figcaption>Финансы — деловой блог</figcaption></figure>
-<figure><img src="images/03.jpg" alt="Обложка: тревел"><figcaption>Тревел — статьи о путешествиях</figcaption></figure>
-<figure><img src="images/04.jpg" alt="Обложка: еда и здоровье"><figcaption>Фуд/ЗОЖ — контент-проекты</figcaption></figure>
-<figure><img src="images/05.jpg" alt="Обложка: удалённая работа"><figcaption>Работа и продуктивность</figcaption></figure>
-<figure><img src="images/06.jpg" alt="Обложка: космос"><figcaption>Наука — научпоп-блог</figcaption></figure>
+<figure class="rise d1"><span class="tag">IT / AI</span><img src="images/01.jpg" alt="Обложка: нейросети"></figure>
+<figure class="rise d2"><span class="tag">Финансы</span><img src="images/02.jpg" alt="Обложка: финансы"></figure>
+<figure class="rise d2"><span class="tag">Тревел</span><img src="images/03.jpg" alt="Обложка: путешествия"></figure>
+<figure class="rise d3"><span class="tag">Фуд / ЗОЖ</span><img src="images/04.jpg" alt="Обложка: еда"></figure>
+<figure class="rise d3"><span class="tag">Работа</span><img src="images/05.jpg" alt="Обложка: удалёнка"></figure>
+<figure class="rise d4"><span class="tag">Наука</span><img src="images/06.jpg" alt="Обложка: космос"></figure>
 </div>
-<div class="doc"><h2>Что входит</h2>
-<ul>
-<li>Обсуждаем тему, аудиторию и подачу → 3 варианта на выбор</li>
-<li>Финал: чистый рендер без водяных знаков + подгонка размеров под ваш сайт/соцсети</li>
-<li>Коммерческое использование включено в цену</li>
-</ul></div>
-<div class="cta"><b>Как заказать:</b> пришлите тему статьи и желаемое настроение — верну черновые варианты в этот же день.</div>
-<small>Демо: 6 обложек разных тематик, сгенерированных на локальной Flux-модели. Точный стиль под бренд — делаю на подгоне.</small>
+<h2>Как проходит заказ</h2>
+<div class="steps">
+<div><span class="n">01</span><div><b>Короткий брифф — 3 минуты</b><p>Тема статьи, настроение («спокойно и дорого» / «ярко и провокационно»), формат (16:9, 4:5, сторис)</p></div></div>
+<div><span class="n">02</span><div><b>3 варианта на выбор</b><p>Через 30–40 минут получаешь три разные обложки в ТГ — выбираешь ту, что бьёт в тему</p></div></div>
+<div><span class="n">03</span><div><b>Финал + все размеры</b><p>Подгонка под твои площадки, чистый файл без водяных знаков, исходник промпта — в подарок</p></div></div>
+</div>
+<h2>Цены</h2>
+<p class="sub">Это видно на странице: не «договоримся в переписке», конкретные пакеты</p>
+<div class="price">
+<div><small>Одиночная</small><b>500 ₽</b><ul><li>1 обложка, 3 варианта</li><li>1 раунд правок</li><li>день-в-день</li></ul></div>
+<div class="hot"><small>Популярный</small><b>1800 ₽</b><ul><li>5 обложек серией</li><li>единый визуальный стиль блога</li><li>2 раунда правок на каждую</li></ul></div>
+<div><small>Контент-пак</small><b>5000 ₽</b><ul><li>15 обложек в месяц</li><li>фиксированная очередь</li><li>приоритетные сроки</li></ul></div>
+</div>
+<h2>Частые вопросы</h2>
+<div class="faq">
+<div><b>А это вообще легально — генерация?</b><p>Да: у сгенерированных картинок нет чужого копирайта (в отличие от стоков). Стиль держим промпт-гайдом, а не заимствованием чужих работ.</p></div>
+<div><b>А если картинка не понравится?</b><p>Раунды правок и черновые варианты уже включены в тарифы. Уточняем стиль до финала, а не после оплаты.</p></div>
+<div><b>Нужны исходники и промпты?</b><p>Да, выдам финальный PNG и текст промпта — сможете воспроизводить стиль сами.</p></div>
+<div><b>Какие тематики умеешь?</b><p>Примеры сверху — IT, финансы, тревел и другие. Ограничений нет: сформулируем под вашу нишу.</p></div>
+</div>
+<div class="cta"><h3>Пришлите тему статьи —<br>верну 3 варианта сегодня</h3><a href="https://t.me/alex_shmelev">Написать в Telegram</a></div>
+<p class="foot">Все шесть обложек сгенерированы локальной Flux-моделью. Данные не уходят в облака. Быстрые правки — бесплатно в течение суток после сдачи.</p>
 </div></body></html>

@@ -1,51 +1,83 @@
 <!DOCTYPE html>
 <html lang="ru"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Серия иллюстраций в едином стиле — генерация нейросетью</title>
+<title>Серия иллюстраций в едином стиле — ручная техника, нейросетевая скорость</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Prata&family=Nunito:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
 <style>
-:root{--ink:#18202a;--mute:#5b6676;--line:#e4e8ee;--acc:#1f6feb}
-*{box-sizing:border-box}
-body{margin:0;font:16px/1.6 'Segoe UI',Roboto,sans-serif;color:var(--ink);background:#fff}
-.wrap{max-width:900px;margin:0 auto;padding:32px 20px 60px}
-.k{color:var(--mute);font-size:13px;letter-spacing:.06em;text-transform:uppercase}
-h1{font-size:30px;line-height:1.25;margin:.5em 0 .4em}
-.pitch{font-size:18px}
-.facts{display:flex;gap:14px;flex-wrap:wrap;margin:26px 0}
-.facts div{border:1px solid var(--line);border-radius:10px;padding:12px 16px}
-.facts b{display:block;font-size:20px;color:var(--acc)}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px;margin:22px 0}
-.grid figure{margin:0;border:1px solid var(--line);border-radius:12px;overflow:hidden;background:#fafbfc}
-.grid img{width:100%;display:block}
-.grid figcaption{padding:10px 14px;font-size:14px;color:var(--mute)}
-.doc{border:1px solid var(--line);border-radius:12px;padding:20px 22px;margin:22px 0}
-.doc h2{font-size:17px;margin:0 0 10px}
-.doc li{margin:6px 0}
-.cta{background:var(--ink);color:#fff;border-radius:12px;padding:20px 22px;margin-top:28px}
-.cta b{color:#9ec5ff}
-small{color:var(--mute)}
+:root{--paper:#f6efe3;--ink:#3a2e24;--terra:#c05a2e;--leaf:#5f6f3e;--card:#fffdf8}
+*{box-sizing:border-box;margin:0}
+body{font:17px/1.65 Nunito,sans-serif;background:var(--paper);color:var(--ink);background-image:radial-gradient(#00000008 1px,transparent 1px);background-size:22px 22px}
+.wrap{max-width:900px;margin:0 auto;padding:0 22px 80px}
+.top{display:flex;justify-content:space-between;align-items:center;padding:26px 0;flex-wrap:wrap;gap:12px}
+.badge{background:var(--leaf);color:#fff;border-radius:999px;padding:7px 18px;font-size:13px;font-weight:700;letter-spacing:.06em}
+h1{font-family:Prata,serif;font-weight:400;font-size:clamp(34px,5.6vw,54px);line-height:1.18;margin:10px 0 16px}
+h1 em{font-style:normal;color:var(--terra);text-decoration:underline wavy var(--terra) 3px;text-underline-offset:8px}
+.pitch{max-width:640px;font-size:18px}
+.pitch b{color:var(--terra)}
+.lead-fact{display:inline-block;margin-top:18px;background:var(--terra);color:#fff;font-weight:700;padding:12px 22px;border-radius:12px;transform:rotate(-1.5deg);box-shadow:4px 4px 0 #3a2e2433}
+h2{font-family:Prata,serif;font-size:28px;margin:66px 0 20px}
+h2::before{content:"◆ ";color:var(--terra);font-size:18px}
+.gallery{display:flex;flex-wrap:wrap;gap:26px;justify-content:center}
+.gallery figure{margin:0;width:min(260px,100%);background:var(--card);padding:12px 12px 16px;border-radius:4px;box-shadow:0 10px 26px #00000018;border:1px solid #e8ddcb;transition:transform .35s}
+.gallery figure:nth-child(odd){transform:rotate(-2deg)}
+.gallery figure:nth-child(even){transform:rotate(1.6deg);margin-top:22px}
+.gallery figure:hover{transform:rotate(0) scale(1.04);z-index:2}
+.gallery img{width:100%;display:block;border-radius:2px}
+.gallery figcaption{font-size:14px;color:#7a6a58;text-align:center;margin-top:10px;font-style:italic}
+.why{background:var(--ink);color:var(--paper);border-radius:20px;padding:30px 32px;margin:60px 0 0}
+.why h2{margin:0 0 16px;color:#fff}
+.why h2::before{content:"◆ ";color:var(--terra)}
+.why ul{list-style:none;padding:0}
+.why li{padding:10px 0;border-bottom:1px dashed #ffffff22}
+.why li:last-child{border:0}
+.why b{color:#f0b27a}
+.offer{display:flex;gap:0;border:2px dashed var(--terra);border-radius:18px;overflow:hidden;margin-top:56px;background:var(--card);flex-wrap:wrap}
+.offer>div{flex:1 1 220px;padding:24px 26px}
+.offer>div:not(:last-child){border-right:1px dashed #d9c8b0}
+.offer .n{font-family:Prata,serif;font-size:15px;color:var(--terra);letter-spacing:.12em;text-transform:uppercase}
+.offer b{display:block;font-size:19px;margin:6px 0}
+.offer p{font-size:14.5px;color:#6b5c4b;margin:0}
+.cta{display:flex;align-items:center;justify-content:space-between;gap:18px;background:var(--leaf);color:#fff;border-radius:16px;padding:24px 30px;margin-top:56px;flex-wrap:wrap}
+.cta h3{font-family:Prata,serif;font-size:22px;margin:0;line-height:1.3}
+.cta a{background:#fff;color:var(--leaf);text-decoration:none;font-weight:700;padding:13px 26px;border-radius:999px;white-space:nowrap;transition:transform .2s;box-shadow:3px 3px 0 #00000022}
+.cta a:hover{transform:translateY(-2px)}
+.foot{margin-top:40px;color:#9a8a76;font-size:13px;text-align:center;font-style:italic}
+@keyframes fall{from{opacity:0;transform:translateY(26px) rotate(3deg)}to{opacity:1}}
+.f{animation:fall .6s ease-out both}
+.a2{animation-delay:.12s}.a3{animation-delay:.24s}
 </style></head><body><div class="wrap">
-<div class="k">Портфолио · Генерация изображений нейросетями (Flux)</div>
-<h1>Серия иллюстраций в едином стиле — 6 сцен-пример</h1>
-<p class="pitch">Самая частая боль заказа «нарисуй мне серию»: картинки от нейросети получаются в разных стилях, и серия рассыпается. Здесь же — 6 разных сюжетов, удержанных в одной руке: общая палитра, общий характер света, общая техника «гуашь по текстурной бумаге». Пример уровня книжной иллюстрации / сторителлинга для бренда.</p>
-<div class="facts">
-<div><b>1–2 дня</b> на серию из 8–10 картин</div>
-<div><b>от 350 ₽</b> за иллюстрацию (серия — скидка от 6 шт.)</div>
-<div><b>консистентность</b> — ключевой кейс: 6 сюжетов, один стиль</div>
+<div class="top f">
+<div style="font-family:Prata,serif;font-size:15px;color:var(--terra)">студия иллюстрации · Flux (локально)</div>
+<div class="badge">формат: серия 6–12 работ</div>
 </div>
-<div class="grid">
-<figure><img src="images/01.jpg" alt="Мальчик и робот в осеннем лесу"><figcaption>1. Мальчик и робот — осенний лес</figcaption></figure>
-<figure><img src="images/02.jpg" alt="Маяк и кит ночью"><figcaption>2. Маяк и кит — ночное море</figcaption></figure>
-<figure><img src="images/03.jpg" alt="Воздушный шар над холмами"><figcaption>3. Воздушный шар — зелёные холмы</figcaption></figure>
-<figure><img src="images/04.jpg" alt="Девочка и лиса в зимней деревне"><figcaption>4. Девочка и лиса — зимняя деревня</figcaption></figure>
-<figure><img src="images/05.jpg" alt="Огород с подсолнухами и котами"><figcaption>5. Огород — подсолнухи и коты</figcaption></figure>
-<figure><img src="images/06.jpg" alt="Дети с бумажным корабликом в луже"><figcaption>6. Бумажный кораблик — дождь</figcaption></figure>
+<h1 class="f">Иллюстрации, которые <em>держатся вместе</em> — все шесть, как один художник</h1>
+<p class="pitch f">Знакомая история: генеришь картинки нейросетью, а на выходе — шесть разных вселенных. Одна глянцевая, вторая мультяшная, третья тёмная. <b>Настоящая ценность серии — консистентность</b>: одна палитра, один свет, одна фактура руки. На демонстрации ниже — шесть разных сюжетов, собранных в одну стилевую рамку.</p>
+<div class="lead-fact f">⬇ 6 сюжетов · 1 стиль · ни одна не рассыпалась</div>
+<h2>Галерея серии</h2>
+<div class="gallery">
+<figure class="f"><img src="images/01.jpg" alt="Мальчик и робот в осеннем лесу"><figcaption>«Робот в роще» — ближайший друг</figcaption></figure>
+<figure class="f a2"><img src="images/02.jpg" alt="Маяк и кит ночью"><figcaption>«Маяк и кит» — ночное морё</figcaption></figure>
+<figure class="f"><img src="images/03.jpg" alt="Воздушный шар над холмами"><figcaption>«Шар над холмами» — соседний ветер</figcaption></figure>
+<figure class="f a2"><img src="images/04.jpg" alt="Девочка и лиса зимой, тёплые окна деревни"><figcaption>«Девочка и лиса» — зима у деревни</figcaption></figure>
+<figure class="f"><img src="images/05.jpg" alt="Усадьба, подсолнухи и коты"><figcaption>«Огород бабушки» — конец лета</figcaption></figure>
+<figure class="f a2"><img src="images/06.jpg" alt="Дети, бумажный кораблик, дождливая улочка"><figcaption>«Бумажный флот» — после дождя</figcaption></figure>
 </div>
-<div class="doc"><h2>Почему серия держится вместе</h2>
+<div class="why f">
+<h2>Что значит «серия без рассыпания»</h2>
 <ul>
-<li>Единый стайл-гайд промпта: палитра, структура света, фактура бумаги, характер краёв</li>
-<li>Перед стартом показываю 2–3 пробных иллюстрации, утверждаем стиль с вами</li>
-<li>Итог готовится под ваш формат: книга, сторителлинг в соцсетях, презентация</li>
-</ul></div>
-<div class="cta"><b>Как заказать:</b> опишите сюжет и настроение — покажу пробный стиль в этот же день, потом серия.</div>
-<small>Все шесть работ сгенерированы нейросетью Flux, затем отобраны как одна стилевая линия. Не сток: картинки уникальны и передаются вам с правом коммерческого использования.</small>
+<li><b>Стайл-гайд промпта.</b> Палитра, структура света, фактура бумаги и характер края зафиксированы одним формулировком — поэтому все шесть читаются как одно имя автора.</li>
+<li><b>Пробы до серии.</b> Отправляешь рассказ или сценарий — я делаю 2–3 пробных кадра, вы утверждаете стиль, и уже потом идёт серия.</li>
+<li><b>Формат под вашу платформу.</b> Книга (2:3), сторителлинг (1:1), широкие развороты (16:9) — генерация под нужную геометрию.</li>
+<li><b>Ничего не стоковое.</b> Картинки уникальны и передаются вам с правом коммерческого использования; генерация локальная, ваш сценарий нигде не засвечивается.</li>
+</ul>
+</div>
+<h2>Как считается</h2>
+<div class="offer">
+<div><div class="n">проба</div><b>0 ₽</b><p>Первый пробный кадр в вашем стиле и на вашем сюжете — бесплатный, чтобы вы увидели руку до оплаты серии</p></div>
+<div><div class="n">серия 6</div><b>1 900 ₽</b><p>Шесть иллюстраций в едином стиле, 2 правки, очистка и экспорт под ваш формат</p></div>
+<div><div class="n">книга 10</div><b>3 000 ₽</b><p>Десять картин + обложка, единый характер персонажей от сцены к сцене</p></div>
+</div>
+<div class="cta f"><h3>Пришлите сценарий или список сцен —<br>сегодня сделаю первый пробный кадр бесплатно</h3><a href="https://t.me/alex_shmelev">Обсудить в Telegram</a></div>
+<p class="foot">Все шесть работ на этой странице сгенерированы локально на модели Flux и отобраны как одна стилевая линия. Данные не покидают ваш и мой компьютеры.</p>
 </div></body></html>
