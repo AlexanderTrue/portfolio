@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ровные стены — GipsStroyInvest</title>
+  <meta name="description" content="Автоматизированная штукатурка стен от 300 руб/м². Оплата по факту, договор, гарантия 2 года.">
+  <link rel="shortcut icon" href="favicon.ico">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    /* Направление: «уровень и гипс» — тёплая штукатурка, тонкие линии разметки,
+       крупная антиква для заголовков и моноширинные цифры, как на замерном листе. */
+    :root {
+      --plaster: #ece6d9;
+      --plaster-2: #e2dac8;
+      --ink: #1d1b17;
+      --ink-soft: #5b564b;
+      --rule: rgba(29, 27, 23, .22);
+      --terra: #b8532e;
+      --ease: cubic-bezier(.2, .7, .1, 1);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'IBM Plex Sans', system-ui, sans-serif;
+      background: var(--plaster); color: var(--ink);
+      line-height: 1.6; -webkit-font-smoothing: antialiased;
+      background-image: radial-gradient(circle at 1px 1px, rgba(29,27,23,.06) 1px, transparent 0);
+      background-size: 22px 22px;
+    }
+    img { max-width: 100%; display: block; }
+    a { color: inherit; }
+    button, input, textarea { font: inherit; }
+    .wrap { max-width: 1260px; margin: 0 auto; padding: 0 32px; }
+    .serif { font-family: 'Instrument Serif', Georgia, serif; font-weight: 400; letter-spacing: -.01em; }
+    .mono { font-family: 'IBM Plex Mono', monospace; font-size: 13px; letter-spacing: .04em; text-transform: uppercase; }
+    em { font-style: italic; color: var(--terra); }
+
+    /* Анимация: ступенчатое появление по классу .in */
+    .rise { opacity: 0; transform: translateY(26px); transition: opacity .9s var(--ease), transform .9s var(--ease); transition-delay: var(--d, 0s); }
+    .rise.in { opacity: 1; transform: none; }
+
+    .btn {
+      display: inline-flex; align-items: center; gap: 12px;
+      padding: 18px 28px; background: var(--ink); color: var(--plaster);
+      font-weight: 500; font-size: 16px; text-decoration: none; border: 0; cursor: pointer;
+      border-radius: 2px; transition: background .3s, color .3s, gap .3s;
+    }
+    .btn::after { content: '→'; transition: transform .3s var(--ease); }
+    .btn:hover { background: var(--terra); }
+    .btn:hover::after { transform: translateX(4px); }
+    .btn-line { background: transparent; color: var(--ink); box-shadow: inset 0 0 0 1.5px var(--ink); }
+    .btn-line:hover { background: var(--ink); color: var(--plaster); }
+
+    /* Верх */
+    .top { position: sticky; top: 0; z-index: 50; background: rgba(236,230,217,.88); backdrop-filter: blur(10px); border-bottom: 1px solid var(--rule); }
+    .top .wrap { height: 78px; display: flex; align-items: center; justify-content: space-between; gap: 20px; }
+    .top img { height: 44px; width: auto; }
+    .top-r { display: flex; align-items: center; gap: 28px; }
+    .top-phone { text-decoration: none; font-family: 'IBM Plex Mono', monospace; font-size: 15px; }
+    .top .btn { padding: 12px 20px; font-size: 14px; }
+
+    /* Hero с линией уровня */
+    .hero { position: relative; padding: 90px 0 120px; overflow: hidden; }
+    .level {
+      position: absolute; left: 0; right: 0; top: 56%; height: 1px; background: var(--ink); opacity: .35;
+    }
+    .level::before, .level::after {
+      content: ''; position: absolute; top: -6px; width: 1px; height: 13px; background: var(--ink);
+    }
+    .level::before { left: 0; } .level::after { right: 0; }
+    .bubble {
+      position: absolute; right: 9%; top: calc(56% - 18px); width: 210px; height: 36px;
+      border: 1px solid var(--ink); border-radius: 999px; background: var(--plaster);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .bubble i {
+      width: 16px; height: 16px; border-radius: 50%; background: var(--terra);
+      animation: drift 6s var(--ease) infinite alternate;
+    }
+    @keyframes drift { from { transform: translateX(-64px); } to { transform: translateX(64px); } }
+
+    .hero-grid { position: relative; display: grid; grid-template-columns: 1.3fr .7fr; gap: 80px; align-items: start; }
+    .hero h1 { font-size: clamp(64px, 9.5vw, 150px); line-height: .92; margin: 28px 0 40px; }
+    .hero h1 em { display: inline-block; }
+    .hero-lead { font-size: 20px; max-width: 520px; color: var(--ink-soft); margin-bottom: 44px; }
+    .price-line { display: flex; align-items: baseline; gap: 16px; margin-bottom: 44px; }
+    .price-line b { font-family: 'Instrument Serif', serif; font-weight: 400; font-size: 120px; line-height: .9; color: var(--terra); }
+    .price-line span { font-size: 18px; }
+    .price-line span small { display: block; color: var(--ink-soft); font-size: 14px; }
+    .hero-btns { display: flex; gap: 16px; flex-wrap: wrap; }
+    .hero-note { margin-top: 30px; color: var(--ink-soft); font-size: 15px; }
+
+    .sheet {
+      background: #f7f3ea; border: 1px solid var(--ink); padding: 38px; position: relative;
+      box-shadow: 12px 12px 0 var(--plaster-2);
+    }
+    .sheet::before {
+      content: 'ЗАМЕР · ФОРМА №1'; position: absolute; top: -11px; left: 22px;
+      background: var(--plaster); padding: 0 10px;
+    }
+    .sheet h3 { font-family: 'Instrument Serif', serif; font-weight: 400; font-size: 36px; line-height: 1.05; margin-bottom: 10px; }
+    .sheet .sub { color: var(--ink-soft); font-size: 15px; margin-bottom: 26px; }
+    .sheet .sub b { color: var(--ink); font-weight: 600; }
+    label { display: block; font-size: 13px; font-family: 'IBM Plex Mono', monospace; text-transform: uppercase; letter-spacing: .05em; margin-bottom: 6px; color: var(--ink-soft); }
+    .field { margin-bottom: 18px; }
+    .input {
+      width: 100%; background: transparent; border: 0; border-bottom: 1.5px solid var(--ink);
+      padding: 10px 0; font-size: 18px; outline: none; border-radius: 0;
+    }
+    .input:focus { border-bottom-color: var(--terra); }
+    textarea.input { min-height: 90px; resize: vertical; border: 1.5px solid var(--ink); padding: 12px; }
+    .sheet .btn { width: 100%; justify-content: space-between; margin-top: 8px; }
+    .sheet small { display: block; margin-top: 14px; color: var(--ink-soft); font-size: 13px; }
+
+    /* Секции */
+    .sec { padding: 120px 0; border-top: 1px solid var(--rule); }
+    .sec-head { display: grid; grid-template-columns: 1fr 2fr; gap: 40px; margin-bottom: 70px; align-items: end; }
+    .sec-head h2 { font-size: clamp(44px, 5.4vw, 84px); line-height: .98; }
+    .sec-head p { color: var(--ink-soft); font-size: 17px; max-width: 460px; justify-self: end; }
+    .idx { color: var(--terra); margin-bottom: 14px; display: block; }
+
+    /* Преимущества: без рамок, большие цифры */
+    .adv { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; }
+    .adv div { padding: 10px 26px 10px 0; border-left: 1px solid var(--rule); padding-left: 26px; }
+    .adv div:first-child { border-left: 0; padding-left: 0; }
+    .adv .serif { font-size: 84px; line-height: 1; color: var(--terra); display: block; margin-bottom: 26px; }
+    .adv h3 { font-size: 20px; font-weight: 600; margin-bottom: 10px; }
+    .adv p { color: var(--ink-soft); font-size: 15px; }
+
+    /* Цены — таблица */
+    .prices-table { border-top: 1px solid var(--ink); }
+    .prow {
+      display: grid; grid-template-columns: 90px 1.2fr 1.6fr 220px; align-items: center; gap: 30px;
+      padding: 40px 0; border-bottom: 1px solid var(--ink);
+      transition: background .4s var(--ease), padding .4s var(--ease);
+    }
+    .prow:hover { background: #f7f3ea; padding-left: 20px; padding-right: 20px; }
+    .prow .serif { font-size: 56px; color: var(--ink-soft); }
+    .prow h3 { font-family: 'Instrument Serif', serif; font-weight: 400; font-size: 40px; line-height: 1.05; }
+    .prow ul { list-style: none; color: var(--ink-soft); font-size: 15px; }
+    .prow li::before { content: '—  '; color: var(--terra); }
+    .prow .val { text-align: right; }
+    .prow .val b { font-family: 'Instrument Serif', serif; font-weight: 400; font-size: 60px; display: block; line-height: 1; }
+    .prow .val small { font-family: 'IBM Plex Mono', monospace; font-size: 13px; color: var(--ink-soft); }
+    .prow .val .btn { margin-top: 14px; padding: 10px 16px; font-size: 14px; }
+    .prices-foot { display: flex; justify-content: space-between; align-items: center; margin-top: 46px; gap: 20px; flex-wrap: wrap; }
+    .prices-foot p { font-family: 'Instrument Serif', serif; font-size: 32px; }
+
+    /* Схема */
+    .steps { display: grid; grid-template-columns: repeat(5, 1fr); counter-reset: s; }
+    .step { padding: 30px 22px 0 0; position: relative; }
+    .step::before {
+      content: ''; position: absolute; top: -1px; left: 0; right: 0; height: 1px; background: var(--ink);
+    }
+    .step::after {
+      content: ''; position: absolute; top: -4px; left: 0; width: 7px; height: 7px; border-radius: 50%; background: var(--terra);
+    }
+    .step .n { font-family: 'IBM Plex Mono', monospace; font-size: 13px; color: var(--ink-soft); margin-bottom: 10px; display: block; }
+    .step img { width: 100%; height: 110px; object-fit: contain; margin-bottom: 16px; }
+    .step h3 { font-size: 18px; font-weight: 600; margin-bottom: 8px; }
+    .step p { color: var(--ink-soft); font-size: 14px; }
+
+    /* Что входит — список с нумерацией */
+    .inc { columns: 2; column-gap: 60px; }
+    .inc div { break-inside: avoid; display: flex; gap: 22px; padding: 22px 0; border-bottom: 1px solid var(--rule); font-size: 18px; }
+    .inc b { font-family: 'IBM Plex Mono', monospace; font-weight: 400; color: var(--terra); font-size: 14px; padding-top: 4px; min-width: 26px; }
+
+    /* Проблемы */
+    .pro { display: grid; grid-template-columns: 1fr 1fr; gap: 0; }
+    .pro > div { padding: 56px; }
+    .pro .bad { border-right: 1px solid var(--ink); }
+    .pro h3 { font-family: 'Instrument Serif', serif; font-weight: 400; font-size: 44px; line-height: 1.05; margin-bottom: 30px; }
+    .pro .good h3 { color: var(--terra); }
+    .pro ul { list-style: none; }
+    .pro li { padding: 14px 0; border-bottom: 1px solid var(--rule); font-size: 17px; color: var(--ink-soft); }
+    .pro .good li { color: var(--ink); }
+
+    /* Материалы */
+    .mats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; }
+    .mat { border-top: 1px solid var(--ink); padding-top: 26px; }
+    .mat img { height: 56px; width: auto; object-fit: contain; object-position: left; margin-bottom: 26px; }
+    .mat h3 { font-family: 'Instrument Serif', serif; font-weight: 400; font-size: 34px; margin-bottom: 10px; }
+    .mat p { color: var(--ink-soft); font-size: 15px; margin-bottom: 16px; }
+    .mat p strong { color: var(--ink); font-weight: 500; }
+    .mat a { font-family: 'IBM Plex Mono', monospace; font-size: 13px; text-transform: uppercase; color: var(--terra); }
+
+    /* Отзыв */
+    .review { display: grid; grid-template-columns: 1.15fr 1fr; gap: 80px; align-items: center; }
+    .shots { position: relative; height: 560px; }
+    .shots img { position: absolute; object-fit: cover; border: 1px solid var(--ink); box-shadow: 10px 10px 0 var(--plaster-2); }
+    .shots img:nth-child(1) { width: 62%; height: 72%; top: 0; left: 0; }
+    .shots img:nth-child(2) { width: 46%; height: 44%; top: 26%; right: 0; }
+    .shots img:nth-child(3) { width: 46%; height: 36%; bottom: 0; right: 0; }
+    .facts { display: grid; grid-template-columns: 1fr 1fr; margin: 34px 0; border-top: 1px solid var(--ink); }
+    .facts div { padding: 18px 0; border-bottom: 1px solid var(--rule); }
+    .facts div:nth-child(odd) { padding-right: 20px; border-right: 1px solid var(--rule); }
+    .facts div:nth-child(even) { padding-left: 24px; }
+    .facts span { display: block; font-family: 'IBM Plex Mono', monospace; font-size: 12px; text-transform: uppercase; color: var(--ink-soft); }
+    .facts strong { font-family: 'Instrument Serif', serif; font-weight: 400; font-size: 30px; }
+    .quote { font-family: 'Instrument Serif', serif; font-size: 28px; line-height: 1.3; font-style: italic; margin-bottom: 22px; }
+    .quote-by { display: flex; align-items: center; gap: 16px; }
+    .quote-by img { width: 52px; height: 52px; border-radius: 50%; object-fit: cover; }
+    .quote-by b { font-weight: 600; display: block; }
+    .quote-by span { font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: var(--ink-soft); }
+
+    /* CTA */
+    .cta { background: var(--ink); color: var(--plaster); padding: 130px 0; }
+    .cta-grid { display: grid; grid-template-columns: 1.2fr 1fr; gap: 80px; align-items: center; }
+    .cta h2 { font-size: clamp(54px, 7vw, 110px); line-height: .95; }
+    .cta h2 em { color: #f0a284; }
+    .cta p { color: #bdb6a6; font-size: 18px; margin-top: 22px; max-width: 520px; }
+    .cta .sheet { background: var(--plaster); box-shadow: 12px 12px 0 var(--terra); }
+    .cta .sheet::before { background: var(--ink); color: var(--plaster); }
+    .cta .sheet .btn { background: var(--ink); }
+
+    /* Другие услуги */
+    .others { display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; }
+    .other { border-top: 1px solid var(--ink); padding-top: 22px; }
+    .other img { width: 100%; height: 240px; object-fit: cover; margin-bottom: 22px; border: 1px solid var(--ink); }
+    .other h3 { font-family: 'Instrument Serif', serif; font-weight: 400; font-size: 32px; margin-bottom: 16px; }
+    .other .btn { padding: 10px 16px; font-size: 14px; }
+
+    /* Контакты */
+    .contacts { display: grid; grid-template-columns: 1fr 1.1fr; gap: 80px; }
+    .c-row { padding: 22px 0; border-top: 1px solid var(--ink); }
+    .c-row:last-child { border-bottom: 1px solid var(--ink); }
+    .c-row span { display: block; font-family: 'IBM Plex Mono', monospace; font-size: 12px; text-transform: uppercase; color: var(--ink-soft); margin-bottom: 6px; }
+    .c-row a, .c-row strong { font-family: 'Instrument Serif', serif; font-weight: 400; font-size: 34px; text-decoration: none; }
+    .c-row p { font-size: 18px; }
+    .map { height: 100%; min-height: 420px; border: 1px solid var(--ink); }
+    .map iframe { width: 100%; height: 100%; border: 0; display: block; filter: grayscale(.6) contrast(1.05); }
+
+    footer { border-top: 1px solid var(--ink); padding: 34px 0; }
+    footer .wrap { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; font-size: 15px; }
+    footer img { height: 40px; width: auto; }
+
+    .mobile { display: none; }
+
+    /* Модалки */
+    .overlay { position: fixed; inset: 0; z-index: 100; background: rgba(29,27,23,.55); display: none; align-items: center; justify-content: center; padding: 20px; }
+    .overlay.open { display: flex; }
+    .overlay .sheet { width: 100%; max-width: 460px; position: relative; }
+    .x { position: absolute; top: 12px; right: 12px; width: 42px; height: 42px; border: 1px solid var(--ink); background: var(--plaster); font-size: 22px; cursor: pointer; }
+    .calculator-contant { position: relative; width: 100%; max-width: 380px; background: var(--ink); padding: 30px; box-shadow: 12px 12px 0 var(--terra); }
+    .calculator-close { position: absolute; top: 12px; right: 12px; width: 42px; height: 42px; border: 1px solid var(--plaster); background: transparent; color: var(--plaster); font-size: 22px; cursor: pointer; }
+    .calculator .top-screen { padding: 12px 0 18px; min-height: 100px; }
+    .calculator .clear { font-family: 'IBM Plex Mono', monospace; color: #f0a284; cursor: pointer; }
+    .calculator .screen { color: var(--plaster); font-family: 'Instrument Serif', serif; font-size: 40px; text-align: right; min-height: 46px; margin-top: 8px; word-break: break-all; }
+    .calculator .keys { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: rgba(236,230,217,.2); border: 1px solid rgba(236,230,217,.2); }
+    .calculator .keys span { display: grid; place-items: center; height: 62px; background: var(--ink); color: var(--plaster); font-family: 'IBM Plex Mono', monospace; font-size: 19px; cursor: pointer; user-select: none; transition: background .2s; }
+    .calculator .keys span:hover { background: #2d2a24; }
+    .calculator .keys span.operator { color: #f0a284; }
+    .calculator .keys span.eval { background: var(--terra); }
+
+    @media (max-width: 1080px) {
+      .hero-grid, .review, .cta-grid, .contacts, .sec-head { grid-template-columns: 1fr; gap: 50px; }
+      .sec-head p { justify-self: start; }
+      .adv, .steps, .mats { grid-template-columns: 1fr 1fr; }
+      .adv div:nth-child(3) { border-left: 0; padding-left: 0; }
+      .prow { grid-template-columns: 1fr; gap: 14px; }
+      .prow .val { text-align: left; }
+      .bubble { display: none; }
+      .top .btn { display: none; }
+      .pro { grid-template-columns: 1fr; }
+      .pro .bad { border-right: 0; border-bottom: 1px solid var(--ink); }
+    }
+    @media (max-width: 640px) {
+      .wrap { padding: 0 20px; }
+      .hero { padding: 60px 0 80px; }
+      .sec { padding: 80px 0; }
+      .adv, .steps, .mats, .others, .inc { grid-template-columns: 1fr; columns: 1; }
+      .adv div { border-left: 0; padding-left: 0; }
+      .prow { padding: 30px 0; }
+      .pro > div { padding: 30px 0; }
+      .shots { height: 380px; }
+      .mobile { display: flex; position: fixed; left: 12px; right: 12px; bottom: 12px; z-index: 40; justify-content: space-between; }
+      body { padding-bottom: 96px; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="top">
+    <div class="wrap">
+      <img src="img/stroitel.png" alt="GipsStroyInvest">
+      <div class="top-r">
+        <a class="top-phone" href="tel:+78003651122">+7 800 365 11 22</a>
+        <button class="btn popup-btn">Консультация</button>
+      </div>
+    </div>
+  </header>
+
+  <section class="hero">
+    <div class="level"></div>
+    <div class="bubble"><i></i></div>
+    <div class="wrap hero-grid">
+      <div>
+        <span class="mono rise in" style="--d:.1s">Автоматизированная штукатурка</span>
+        <h1 class="serif rise in" style="--d:.2s">Ровные стены <em>за&nbsp;сроки</em></h1>
+        <p class="hero-lead rise in" style="--d:.35s">Выравниваем стены автоматизированным методом. Работаем по договору, в срок и с гарантией 2&nbsp;года.</p>
+        <div class="price-line rise in" style="--d:.45s">
+          <b>300</b>
+          <span>руб/м²<small>стоимость от</small></span>
+        </div>
+        <div class="hero-btns rise in" style="--d:.55s">
+          <button class="btn popup-btn">Получить консультацию</button>
+          <a class="btn btn-line" href="#prices">Цены</a>
+        </div>
+        <p class="hero-note rise in" style="--d:.65s">Оплата по факту — только за выполненную работу.</p>
+      </div>
+      <div class="sheet rise in" style="--d:.4s">
+        <h3>Замер бесплатно</h3>
+        <p class="sub">Закажите <b>выезд замерщика</b>. Назовём точную цену, приедем в день обращения.</p>
+        <form method="post" onsubmit="send(event, 'send.php')">
+          <div class="field"><label for="name">Ваше имя</label><input id="name" required name="UserName" class="input" type="text"></div>
+          <div class="field"><label for="phone">Номер телефона</label><input id="phone" required name="UserPhone" class="input" type="tel"></div>
+          <button class="btn" type="submit">Оставить заявку</button>
+          <small>Приедем в день обращения</small>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec">
+    <div class="wrap">
+      <div class="sec-head">
+        <div class="rise"><span class="mono idx">01 — Преимущества</span><h2 class="serif">Почему<br>нам <em>доверяют</em></h2></div>
+        <p class="rise">Прозрачные условия, договор с юридическим лицом и материалы от компании-поставщика.</p>
+      </div>
+      <div class="adv">
+        <div class="rise"><span class="serif">01</span><h3>Платите по факту</h3><p>Только за выполненные работы. Никаких скрытых доплат и промежуточных платежей.</p></div>
+        <div class="rise" style="--d:.1s"><span class="serif">02</span><h3>Заключаем договор</h3><p>Работаем с юридическим лицом. Все обязательства прописаны и выполняются.</p></div>
+        <div class="rise" style="--d:.2s"><span class="serif">03</span><h3>Точно в срок</h3><p>Соблюдаем сроки из договора. Квартира 135 м² — от 3 до 5 дней.</p></div>
+        <div class="rise" style="--d:.3s"><span class="serif">04</span><h3>Экономьте на материалах</h3><p>Мы структурное подразделение компании-поставщика стройматериалов.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec" id="prices">
+    <div class="wrap">
+      <div class="sec-head">
+        <div class="rise"><span class="mono idx">02 — Цены</span><h2 class="serif">Выберите<br><em>вариант</em></h2></div>
+        <p class="rise">Цены за квадратный метр. Точная стоимость — после бесплатного замера.</p>
+      </div>
+      <div class="prices-table">
+        <div class="prow rise">
+          <span class="serif">A</span>
+          <div><h3>Вашими материалами</h3></div>
+          <ul><li>Проведение работ</li><li>Уборка</li></ul>
+          <div class="val"><small>от</small><b>300</b><small>руб/м²</small><br><button class="btn popup-btn">Заказать</button></div>
+        </div>
+        <div class="prow rise">
+          <span class="serif">B</span>
+          <div><h3>Под шпаклёвку</h3></div>
+          <ul><li>Завоз материала и его подъём</li><li>Проведение работ</li><li>Уборка</li><li>Гарантия 2 года</li></ul>
+          <div class="val"><small>от</small><b>530</b><small>руб/м²</small><br><button class="btn popup-btn">Заказать</button></div>
+        </div>
+        <div class="prow rise">
+          <span class="serif">C</span>
+          <div><h3>Под обои</h3></div>
+          <ul><li>Завоз материала и его подъём</li><li>Проведение работ</li><li>Уборка</li><li>Гарантия 2 года</li><li>Можно сразу купить обои</li></ul>
+          <div class="val"><small>от</small><b>560</b><small>руб/м²</small><br><button class="btn popup-btn">Заказать</button></div>
+        </div>
+      </div>
+      <div class="prices-foot rise">
+        <p>Не знаете, что выбрать?</p>
+        <button class="btn btn-line calc-open">Рассчитать точную стоимость</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec">
+    <div class="wrap">
+      <div class="sec-head">
+        <div class="rise"><span class="mono idx">03 — Процесс</span><h2 class="serif">Схема<br><em>работы</em></h2></div>
+        <p class="rise">Пять этапов от первой заявки до подписанного акта.</p>
+      </div>
+      <div class="steps">
+        <div class="step rise"><span class="n">01</span><img src="img/sheme/1.png" alt=""><h3>Заявка</h3><p>Оставьте заявку онлайн или по телефону.</p></div>
+        <div class="step rise" style="--d:.1s"><span class="n">02</span><img src="img/sheme/2.png" alt=""><h3>Выезд специалиста</h3><p>В течение дня — замеры и точная цена.</p></div>
+        <div class="step rise" style="--d:.2s"><span class="n">03</span><img src="img/sheme/3.png" alt=""><h3>Договор</h3><p>Готовим договор и согласовываем его с вами.</p></div>
+        <div class="step rise" style="--d:.3s"><span class="n">04</span><img src="img/sheme/4.png" alt=""><h3>Начало работ</h3><p>Доставляем материалы и приступаем.</p></div>
+        <div class="step rise" style="--d:.4s"><span class="n">05</span><img src="img/sheme/5.png" alt=""><h3>Сдача объекта</h3><p>Проверяете качество, подписываете акт, оплата.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec">
+    <div class="wrap">
+      <div class="sec-head">
+        <div class="rise"><span class="mono idx">04 — Что входит</span><h2 class="serif">Всё на 100%<br><em>включено</em></h2></div>
+        <p class="rise">При работе с вашим материалом в стоимость входит:</p>
+      </div>
+      <div class="inc">
+        <div class="rise"><b>01</b>Материалы: штукатурка, грунтовка или бетонконтакт, маяки, сетки на стыки</div>
+        <div class="rise"><b>02</b>Доставка оборудования и материала на объект</div>
+        <div class="rise"><b>03</b>Подготовка поверхности: очистка, грунтовка</div>
+        <div class="rise"><b>04</b>Установка маяков</div>
+        <div class="rise"><b>05</b>Оштукатуривание поверхности</div>
+        <div class="rise"><b>06</b>Удаление маяков</div>
+        <div class="rise"><b>07</b>Глянцевание</div>
+        <div class="rise"><b>08</b>Уборка и вывоз мусора</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec">
+    <div class="wrap">
+      <div class="sec-head">
+        <div class="rise"><span class="mono idx">05 — Сомнения</span><h2 class="serif">Развеем<br><em>опасения</em></h2></div>
+      </div>
+      <div class="pro">
+        <div class="bad rise">
+          <h3>Какие могут быть проблемы</h3>
+          <ul>
+            <li>Стены и углы будут неровными</li>
+            <li>Ремонт затянется на долгий срок</li>
+            <li>Сложности с доставкой и разгрузкой материала</li>
+            <li>Останется мусор и пыль после ремонта</li>
+          </ul>
+        </div>
+        <div class="good rise" style="--d:.15s">
+          <h3>Наше решение</h3>
+          <ul>
+            <li>Квалификация и минимум 5 лет опыта: идеально ровные поверхности</li>
+            <li>Соблюдаем сроки, прописанные в договоре</li>
+            <li>Доставка материала и подъём бесплатно</li>
+            <li>Убираем и вывозим мусор после работы</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec">
+    <div class="wrap">
+      <div class="sec-head">
+        <div class="rise"><span class="mono idx">06 — Материалы</span><h2 class="serif">Проверенные<br><em>бренды</em></h2></div>
+      </div>
+      <div class="mats">
+        <div class="mat rise"><img src="img/materials/1.png" alt="Knauf"><h3>Knauf</h3><p>МП-75 — <strong>245 руб</strong> / мешок</p><a href="#">Сертификат →</a></div>
+        <div class="mat rise" style="--d:.1s"><img src="img/materials/2.png" alt="Volma"><h3>Volma</h3><p>Аква слой — <strong>245 руб</strong><br>Гипс актив — <strong>245 руб</strong></p><a href="#">Сертификат →</a></div>
+        <div class="mat rise" style="--d:.2s"><img src="img/materials/3.png" alt="Koroed"><h3>Koroed</h3><p>Аква слой — <strong>245 руб</strong><br>Гипс актив — <strong>245 руб</strong></p><a href="#">Сертификат →</a></div>
+        <div class="mat rise" style="--d:.3s"><img src="img/materials/4.png" alt="Ceresit"><h3>Ceresit</h3><p>Аква слой — <strong>245 руб</strong><br>Гипс актив — <strong>245 руб</strong></p><a href="#">Сертификат →</a></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec">
+    <div class="wrap review">
+      <div class="shots rise">
+        <img src="img/feedback/6.jpg" alt="Объект">
+        <img src="img/feedback/1.jpg" alt="Объект">
+        <img src="img/feedback/2.jpg" alt="Объект">
+      </div>
+      <div class="rise" style="--d:.15s">
+        <span class="mono idx">07 — Отзыв</span>
+        <h2 class="serif" style="font-size:clamp(44px,5vw,72px);line-height:1;margin-bottom:10px">Реальный <em>объект</em></h2>
+        <div class="facts">
+          <div><span>Объект</span><strong>Москва, Ленина</strong></div>
+          <div><span>Площадь</span><strong>367 м²</strong></div>
+          <div><span>Срок</span><strong>10 дней</strong></div>
+          <div><span>Стоимость</span><strong>550 р/м²</strong></div>
+        </div>
+        <p style="margin-bottom:30px;color:var(--ink-soft)">Перепад неровности стен достигал <b style="color:var(--ink)">6 см</b>.</p>
+        <p class="quote">«Произвели работу очень качественно и в срок, вежливые и добросовестные работники. В итоге сделали скидку. Буду рекомендовать знакомым и родственникам».</p>
+        <div class="quote-by">
+          <img src="img/avatar.png" alt="Юрий Кузнецов">
+          <div><b>Юрий Кузнецов</b><span>ЗАКАЗЧИК</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="cta" id="contact">
+    <div class="wrap cta-grid">
+      <div class="rise">
+        <span class="mono" style="color:#f0a284">08 — Просмотр</span>
+        <h2 class="serif" style="margin-top:20px">Приезжайте и<br><em>смотрите сами</em></h2>
+        <p>Оборудование, материалы и качество исполнения — на одном из наших действующих объектов. Подберём ближайший к вам.</p>
+      </div>
+      <div class="sheet rise" style="--d:.15s">
+        <h3>Записаться на просмотр</h3>
+        <p class="sub">Оставьте контакты для связи</p>
+        <form method="post" onsubmit="send(event, 'send.php')">
+          <div class="field"><label for="name_2">Ваше имя</label><input id="name_2" name="UserName" required class="input" type="text"></div>
+          <div class="field"><label for="phone1">Номер телефона</label><input id="phone1" name="UserPhone" required class="input" type="tel"></div>
+          <button class="btn">Записаться на просмотр</button>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec">
+    <div class="wrap">
+      <div class="sec-head">
+        <div class="rise"><span class="mono idx">09 — Дополнительно</span><h2 class="serif">Другие<br><em>услуги</em></h2></div>
+      </div>
+      <div class="others">
+        <div class="other rise"><img src="img/upsell/1.jpg" alt="Монтажные работы"><h3>Монтажные работы</h3><button class="btn btn-line popup-btn">Узнать цены</button></div>
+        <div class="other rise" style="--d:.1s"><img src="img/upsell/2.jpg" alt="Стяжка пола"><h3>Стяжка пола</h3><button class="btn btn-line popup-btn">Узнать цены</button></div>
+        <div class="other rise" style="--d:.2s"><img src="img/upsell/3.jpeg" alt="Сантехнические работы"><h3>Сантехника</h3><button class="btn btn-line popup-btn">Узнать цены</button></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec" style="padding-top:0">
+    <div class="wrap contacts">
+      <div class="rise">
+        <span class="mono idx">Контакты</span>
+        <div class="c-row"><span>Телефон</span><a href="tel:+78003651122">+7 800 365 11 22</a></div>
+        <div class="c-row"><span>E-mail</span><a href="mailto:giblolit@ya.ru" style="font-size:26px">giblolit@ya.ru</a></div>
+        <div class="c-row"><span>Адрес офиса</span><p>Челябинск, Копейское шоссе, 12, офис 34</p></div>
+        <div class="c-row"><span>Часы работы</span><p>Пн–Пт, с 9:00 до 18:00</p></div>
+        <div class="c-row"><span>Реквизиты</span><p>ИНН 35445573, ОГРН 35234745</p></div>
+      </div>
+      <div class="map rise" style="--d:.15s">
+        <iframe
+          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2281.463367910052!2d61.505879415461294!3d55.1226668478812!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x43c5f31d5482c817%3A0xec83044de395ba73!2z0JrQvtC_0LXQudGB0LrQvtC1INGILiwgMTIsINCn0LXQu9GP0LHQuNC90YHQuiwg0KfQtdC70Y_QsdC40L3RgdC60LDRjyDQvtCx0LsuLCA0NTQwMTI!5e0!3m2!1sru!2sru!4v1637050736225!5m2!1sru!2sru"
+          allowfullscreen loading="lazy" title="Карта"></iframe>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="wrap">
+      <img src="img/footer-logo.png" alt="Логотип">
+      <div><a href="tel:+78003651122">+7 800 365 11 22</a> · giblolit@ya.ru · Пн–Пт 9:00–18:00</div>
+    </div>
+  </footer>
+
+  <a class="btn mobile popup-btn" href="#">Получить консультацию</a>
+
+  <div class="overlay" id="modal">
+    <div class="sheet">
+      <button class="x" id="modal-close" aria-label="Закрыть">&times;</button>
+      <h3>Заинтересовало?</h3>
+      <p class="sub">Оставьте контакты, и мы свяжемся с вами</p>
+      <form method="post" onsubmit="send(event, 'send.php')">
+        <div class="field"><label for="UserName_1">Ваше имя</label><input id="UserName_1" name="UserName" required class="input" type="text"></div>
+        <div class="field"><label for="phone3">Номер телефона</label><input id="phone3" name="UserPhone" required class="input" type="tel"></div>
+        <div class="field"><label for="UserMassage2">Сообщение</label><textarea id="UserMassage2" name="UserMassage" class="input"></textarea></div>
+        <button class="btn">Оставить заявку</button>
+      </form>
+    </div>
+  </div>
+
+  <div class="overlay" id="calc-modal">
+    <div class="calculator-contant" id="calculator">
+      <button class="calculator-close" id="calc-close" aria-label="Закрыть">&times;</button>
+      <div class="top-screen">
+        <span class="clear">C</span>
+        <div class="screen"></div>
+      </div>
+      <div class="keys">
+        <span>7</span><span>8</span><span>9</span><span class="operator">+</span>
+        <span>4</span><span>5</span><span>6</span><span class="operator">-</span>
+        <span>1</span><span>2</span><span>3</span><span class="operator">÷</span>
+        <span>0</span><span>.</span><span class="eval">=</span><span class="operator">x</span>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://code.jquery.com/jquery-1.11.0.min.js"></script>
+  <script src="js/jquery.maskedinput.min.js"></script>
+  <script>
+    (function () {
+      var modal = document.getElementById('modal');
+      var calc = document.getElementById('calc-modal');
+      function openModal(e) { if (e) e.preventDefault(); modal.classList.add('open'); }
+      function closeModal() { modal.classList.remove('open'); }
+      function closeCalc() { calc.classList.remove('open'); }
+
+      document.querySelectorAll('.popup-btn').forEach(function (b) { b.addEventListener('click', openModal); });
+      document.querySelectorAll('.calc-open').forEach(function (b) { b.addEventListener('click', function () { calc.classList.add('open'); }); });
+      document.getElementById('modal-close').addEventListener('click', closeModal);
+      document.getElementById('calc-close').addEventListener('click', closeCalc);
+      modal.addEventListener('click', function (e) { if (e.target === modal) closeModal(); });
+      calc.addEventListener('click', function (e) { if (e.target === calc) closeCalc(); });
+      document.addEventListener('keydown', function (e) { if (e.key === 'Escape') { closeModal(); closeCalc(); } });
+
+      var io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (en) {
+          if (en.isIntersecting) { en.target.classList.add('in'); io.unobserve(en.target); }
+        });
+      }, { threshold: 0.12 });
+      document.querySelectorAll('.rise:not(.in)').forEach(function (el) { io.observe(el); });
+
+      if (window.jQuery && jQuery.fn.mask) {
+        jQuery('#phone, #phone1, #phone3').mask('+7(999) 999-9999');
+      }
+    })();
+
+    function send(event, php) {
+      event.preventDefault();
+      var req = new XMLHttpRequest();
+      req.open('POST', php, true);
+      req.onload = function () {
+        if (req.status >= 200 && req.status < 400) {
+          var json = JSON.parse(this.response);
+          alert(json.result == 'success' ? 'Сообщение отправлено' : 'Ошибка. Сообщение не отправлено');
+        } else {
+          alert('Ошибка сервера. Номер: ' + req.status);
+        }
+      };
+      req.onerror = function () { alert('Ошибка отправки запроса'); };
+      req.send(new FormData(event.target));
+    }
+  </script>
+  <script src="calculate/calculate.js"></script>
+</body>
+</html>
