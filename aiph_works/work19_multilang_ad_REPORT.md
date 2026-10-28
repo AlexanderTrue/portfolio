@@ -1,3 +1,19 @@
+﻿# Work 19 - v10 (28.10.2026): Yandex LiveTTS 48 kHz - FINAL VOICE
+
+Studio fullband voice obtained. SpeechKit API is closed for new personal accounts (Feature permission denied even with ai.speechkit-tts.user role + SA key + Active billing; playground works) -> voice harvested by PLAYGROUND AUTOMATION: control Edge + CDP, fill text -> click "Synthesize" -> intercept audio/mp3 network response (scripts cdp_synth_probe.py / cdp_synth_batch.py in %TEMP%\opencode).
+
+Voices: EN John (LiveTTS, no role), RU Vasily (LiveTTS, role "sales"). All takes 48 kHz mono.
+
+Mix v10 (gen_work19_mix10.py): 48 kHz; music m3 resampled to 48k, exactly 729000 samples; raw voice, no DSP, 40 ms microfades; voice peak -1.5 dB; music 0.20 ducked to 0.30 (0.35 s ramps); starts EN 0.90/5.95/11.15, RU 0.90/5.95/10.70.
+
+Published (commit 1e6ee94, all URLs 200):
+- aiph_works/work19/mlang6_product_15sec_en.mp4  (EN, John)
+- aiph_works/work19/mlang6_product_15sec_ru.mp4  (RU, Vasily)
+- aiph_works/work19/work19_en_voice10_john_only.m4a  (voice solo)
+
+ES: LiveTTS has no Spanish (RU/KK/EN/UZ/DE/HE only) - ES stays edge-tts bonus or is dropped (owner decides).
+
+Publishing incident: accidental `git add -A` committed 407 unrelated files incl. 3 embedded-repo gitlinks that broke the Pages build (404). Index reverted in commit 1e6ee94; working-copy files kept.
 # Work 19 — Рекламный ролик с мультиязычной озвучкой (RU / EN / ES)
 
 ## Продукт
